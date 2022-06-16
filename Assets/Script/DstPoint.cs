@@ -111,13 +111,13 @@ public class DstPoint : MonoBehaviour
         //    }
         //}
 
-        if (srcPoint)
-        {
-            if (gameManager)
-            {
-                gameManager.dstPointTouchEnter(srcPoint, this);
-            }
-        }
+        //if (srcPoint)
+        //{
+        //    if (gameManager)
+        //    {
+        //        gameManager.dstPointTouchEnter(srcPoint, this);
+        //    }
+        //}
 
     }
 

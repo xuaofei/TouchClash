@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public enum SrcPointActiveState
 {
     UNACTIVE,       //未激活状态
@@ -25,6 +24,7 @@ public class SrcPoint : MonoBehaviour
     public int fingerId;                    //触摸ID
     public int srcPointId;                  //dstPointId相同
     public Color color;
+    public float immuneDuration = 2.0f;
     List<string> immuneTargetList = new List<string>();
 
     private GameManager gameManager;
@@ -112,17 +112,38 @@ public class SrcPoint : MonoBehaviour
             if (immuneTargetList.Contains(minefieldController.minefieldName))
             {
                 // 还在免疫时间内
+                Debug.Log("xaf already in immuneTarge, not add:" + minefieldController.minefieldName);
                 return;
             }
 
             // 加入免疫列表
             immuneTargetList.Add(minefieldController.minefieldName);
+            Debug.Log("xaf immuneTarge add:" + minefieldController.minefieldName);
+
             // 开启免疫倒计时
-            //Invoke();
+            UnityTimer.Timer timer = UnityTimer.Timer.Register(immuneDuration, ()=> {
+                immuneTargetList.Remove(minefieldController.minefieldName);
+
+                Debug.Log("xaf immuneTarge Remove:" + minefieldController.minefieldName);
+            });
 
             if (gameManager)
             {
                 gameManager.ReduceBloodHitMinefield(this);
+            }
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        Debug.Log("xaf srcpoint OnTriggerEnter2D");
+
+        DstPoint dstPoint = collision.GetComponent<DstPoint>();
+        if (dstPoint)
+        {
+            if (gameManager)
+            {
+                gameManager.dstPointTouchExit(this, dstPoint);
             }
         }
     }

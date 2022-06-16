@@ -3,23 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+public enum MinefieldArea
+{
+    Area0,
+    Area1,
+    Area2,
+    Area3,
+    Area4,
+    Area5,
+    Area6,
+    Area7,
+}
+
 [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter))]
 public class MinefieldController : MonoBehaviour
 {
     public int minefieldId;
     public string minefieldName;
-    private GameManager gameManager;
+    public MinefieldArea minefieldArea;
+    // 雷区作用对象
+    public List<int> targets;
 
-    MeshFilter meshFilter;
-    MeshRenderer meshRenderer;
-    PolygonCollider2D polygonCollider2D;
-    List<Vector3> meshPosList;
+    private GameManager gameManager;
+    private MeshFilter meshFilter;
+    private MeshRenderer meshRenderer;
+    private PolygonCollider2D polygonCollider2D;
+    private List<Vector3> meshPosList = new List<Vector3>();
 
     // Start is called before the first frame update
     void Start()
     {
-        minefieldId = 1;
-        minefieldName = "minefield_1";
+        minefieldId = (int)minefieldArea;
+        minefieldName = "minefield_" + minefieldId;
 
         GameObject map = GameObject.Find("map");
         if (map)
@@ -30,10 +45,6 @@ public class MinefieldController : MonoBehaviour
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
         polygonCollider2D = GetComponent<PolygonCollider2D>();
-        meshPosList = new List<Vector3>();
-        
-
-        Mesh mesh = new Mesh();
 
         int width = Screen.width;
         int height = Screen.height;
@@ -47,6 +58,7 @@ public class MinefieldController : MonoBehaviour
         triangles[1] = 1;
         triangles[2] = 2;
 
+        Mesh mesh = new Mesh();
         mesh.vertices = meshPosList.ToArray();
         mesh.triangles = triangles;
         meshFilter.mesh = mesh;
@@ -60,29 +72,9 @@ public class MinefieldController : MonoBehaviour
         polygonCollider2D.SetPath(0, v2List.ToArray());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     Vector3 screenToWorldPoint(Vector3 screenPosition)
     {
         Camera camera = Camera.main;
         return camera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, transform.position.z));
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Debug.Log("xaf minefield OnTriggerEnter");
-
-        SrcPoint srcPoint = collision.GetComponent<SrcPoint>();
-        if(srcPoint)
-        {
-            gameManager.ReduceBloodHitMinefield(srcPoint);
-        }
-
-        
     }
 }
