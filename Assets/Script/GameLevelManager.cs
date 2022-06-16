@@ -21,7 +21,8 @@ public class GameLevelManager
 
     public GameLevel GetNextGameLevel(int currentLevel)
     {
-        GameLevel gameLevel = new GameLevel();
+        GameLevelDescribet gameLevelDescribet = new GameLevelDescribet();
+        GameLevel gameLevel = new GameLevel(gameLevelDescribet);
         gameLevel.levelIndex = currentLevel;
 
         int width = Screen.width;

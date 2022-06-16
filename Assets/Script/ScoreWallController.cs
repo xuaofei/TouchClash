@@ -69,7 +69,7 @@ public class ScoreWallController : MonoBehaviour
         //score.text = totalScore.ToString();
 
         //Debug.Log("xaf currentThread:" + Thread.CurrentThread.ManagedThreadId.ToString());
-
+        //score.rectTransform.rect;
     }
 
 

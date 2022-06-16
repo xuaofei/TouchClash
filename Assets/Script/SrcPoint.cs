@@ -152,6 +152,8 @@ public class SrcPoint : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Debug.Log("xaf srcpoint OnCollisionEnter2D");
+
+       
     }
 
     //private void RemoveImmuneTarge()

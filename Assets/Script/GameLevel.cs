@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public delegate void GetSrcPoints();
+
 
 public struct MinefieldConfig
 {
@@ -19,16 +21,17 @@ public class GameLevel
     public int levelIndex;
 
     public List<Vector2> dstPointPos = new List<Vector2>();
-    //public List<Vector2> dstPointPos = new List<Vector2>();
-
     public MinefieldConfig minefieldConfig = new MinefieldConfig();
-    //public List<Candy> candies;
-    //public List<Bullet> bullets;
-    //public List<LaseRay> laseRays;
 
-    //public string bgMuisc;
+    public List<Candy> candies;
+    public List<Bullet> bullets;
+    public List<LaseRay> laseRays;
 
-    GameLevel(GameLevelDescribet gameLevelDescribet)
+    public string bgMuisc;
+
+    public GetSrcPoints getSrcPointsFun;
+
+    public GameLevel(GameLevelDescribet gameLevelDescribet)
     {
         int width = Screen.width;
         int height = Screen.height;
@@ -49,7 +52,7 @@ public class GameLevel
         {
             for(int i = 0;i < gameLevelDescribet.playerCount; i++)
             {
-
+                Rect r;
             }
         }
 

@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
     private List<Vector2> srcPointPos = new List<Vector2>();
     private List<GuideLine> guideLineList = new List<GuideLine>();
 
-    //public GuideLine ;
-
     List<Color> colors = new List<Color> { Color.blue, Color.yellow, Color.green, Color.red };
 
     // Start is called before the first frame update
