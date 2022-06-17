@@ -17,20 +17,25 @@ public class GameManager : MonoBehaviour
     private List<Vector2> srcPointPos = new List<Vector2>();
     private List<GuideLine> guideLineList = new List<GuideLine>();
     private int currentGameLevel = 0;
+    private float pixelsPerUnit = 100f;
 
-    GameLevelManager gameLevelManager = new GameLevelManager();
+    GameLevelManager gameLevelManager;
 
     List<Color> colors = new List<Color> { Color.blue, Color.yellow, Color.green, Color.red };
 
     // Start is called before the first frame update
     void Start()
     {
+        gameLevelManager = new GameLevelManager();
+
+        Camera.main.orthographicSize = Screen.height / 100f / 2f;
         generateSrcPointPos(playerCount);
 
         // 生成原始点
         generateSrcPoint();
 
         StartLevel(currentGameLevel);
+       
 
         //// 生成目标点
         //generateDstPoint();
@@ -311,6 +316,12 @@ public class GameManager : MonoBehaviour
             srcPoint.transform.position = srtPointPos;
             srcPoint.srcPointId = i;
             srcPoint.color = colors[i];
+            float screenRadius = srcPoint.getPointScreenRadius();
+            float scale = WidgetSizeManager.Instance.srcPointRadius / screenRadius; 
+            srcPoint.transform.localScale = new Vector3(scale, scale, 1f);
+
+            int width = Screen.width;
+            int height = Screen.height;
 
             srcPointList.Add(srcPoint);
         }
@@ -325,6 +336,9 @@ public class GameManager : MonoBehaviour
             dstPoint.transform.position = screenToWorldPoint(dstPointPosInfo.pos);
             dstPoint.dstPointId = dstPointPosInfo.dstPointId;
             dstPoint.color = colors[dstPointPosInfo.dstPointId];
+            float screenRadius = dstPoint.getPointScreenRadius();
+            float scale = WidgetSizeManager.Instance.dstPointRadius / screenRadius;
+            dstPoint.transform.localScale = new Vector3(scale, scale, 1f);
 
             dstPointList.Add(dstPoint);
             Debug.Log("dstPointList count: " + dstPointList.Count);
@@ -355,6 +369,10 @@ public class GameManager : MonoBehaviour
             bomb.transform.position = screenToWorldPoint(bombPosInfo.pos);
             bomb.bombId = bombPosInfo.bombId;
             bomb.color = colors[bombPosInfo.bombId];
+
+            float screenRadius = bomb.getPointScreenRadius();
+            float scale = WidgetSizeManager.Instance.bombRadius / screenRadius;
+            bomb.transform.localScale = new Vector3(scale, scale, 1f);
 
             bombList.Add(bomb);
             Debug.Log("bombList count: " + dstPointList.Count);

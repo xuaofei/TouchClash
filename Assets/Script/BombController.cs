@@ -36,4 +36,16 @@ public class BombController : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    public float getPointScreenRadius()
+    {
+        float pointScreenHeight = 0.0f;
+        // 物体大小，摄像机大小，非屏幕大小。
+        Vector2 pointSize = GetComponent<SpriteRenderer>().bounds.size;
+        float cameraSize = Camera.main.orthographicSize;
+        // 物体高度，屏幕大小。
+        pointScreenHeight = Screen.height / (cameraSize * 2) * pointSize.y;
+
+        return pointScreenHeight / 2;
+    }
 }

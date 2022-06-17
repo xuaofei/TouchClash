@@ -104,6 +104,7 @@ public class SrcPoint : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        float ddd = getPointScreenRadius();
         Debug.Log("xaf srcpoint OnTriggerEnter2D");
 
         DstPoint dstPoint = collision.GetComponent<DstPoint>();
@@ -164,7 +165,7 @@ public class SrcPoint : MonoBehaviour
 
         //collision.collider.bounds;
 
-
+        //transform.localScale
     }
 
     public SrcPointPosInfo GetPosInfo()

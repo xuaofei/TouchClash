@@ -12,7 +12,7 @@ public class GameLevelManager
 {
     public int playerCount;
     public GameType gameType = GameType.LevelFixed;
-    private WidgetSizeManager widgetSizeManager = WidgetSizeManager.GetInstance();
+    private WidgetSizeManager widgetSizeManager = WidgetSizeManager.Instance;
     private int minSafeSpace = 20;
 
     public List<GameLevel> GetGameLevels()
