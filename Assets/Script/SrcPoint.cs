@@ -14,9 +14,17 @@ public enum SrcPointMovementState
     RUN             //手指按住，移动状态
 }
 
+public struct SrcPointPosInfo
+{
+    public int srcPointId;
+    // 位置
+    public Vector2 pos;
+    //// 半径
+    //public float radius;
+};
+
 public class SrcPoint : MonoBehaviour
 {
-
     // 大小
     public SrcPointActiveState activeState;
     public SrcPointMovementState movementState;
@@ -90,6 +98,7 @@ public class SrcPoint : MonoBehaviour
     // 无敌状态
     public void Invincible()
     {
+        //transform.TransformPoint
         //Invincible
     }
 
@@ -100,10 +109,7 @@ public class SrcPoint : MonoBehaviour
         DstPoint dstPoint = collision.GetComponent<DstPoint>();
         if (dstPoint)
         {
-            if (gameManager)
-            {
-                gameManager.dstPointTouchEnter(this, dstPoint);
-            }
+             gameManager.dstPointTouchEnter(this, dstPoint);
         }
 
         MinefieldController minefieldController = collision.GetComponent<MinefieldController>();
@@ -127,10 +133,15 @@ public class SrcPoint : MonoBehaviour
                 Debug.Log("xaf immuneTarge Remove:" + minefieldController.minefieldName);
             });
 
-            if (gameManager)
-            {
-                gameManager.ReduceBloodHitMinefield(this);
-            }
+
+            gameManager.ReduceBloodHitMinefield(this);
+        }
+
+
+        BombController bombController = collision.GetComponent<BombController>();
+        if (bombController)
+        {
+            gameManager.ReduceBloodHitBomb(this, bombController);
         }
     }
 
@@ -141,10 +152,7 @@ public class SrcPoint : MonoBehaviour
         DstPoint dstPoint = collision.GetComponent<DstPoint>();
         if (dstPoint)
         {
-            if (gameManager)
-            {
-                gameManager.dstPointTouchExit(this, dstPoint);
-            }
+            gameManager.dstPointTouchExit(this, dstPoint);
         }
     }
 
@@ -153,8 +161,18 @@ public class SrcPoint : MonoBehaviour
     {
         Debug.Log("xaf srcpoint OnCollisionEnter2D");
 
-       
+
+        //collision.collider.bounds;
+
+
     }
 
-    //private void RemoveImmuneTarge()
+    public SrcPointPosInfo GetPosInfo()
+    {
+        SrcPointPosInfo srcPointPosInfo;
+        srcPointPosInfo.srcPointId = srcPointId;
+        Camera camera = Camera.main;
+        srcPointPosInfo.pos = camera.WorldToScreenPoint(new Vector3(transform.position.x, transform.position.y, transform.position.z));
+        return srcPointPosInfo;
+    }
 }

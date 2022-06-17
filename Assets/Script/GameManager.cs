@@ -7,30 +7,35 @@ public class GameManager : MonoBehaviour
     public int playerCount = 3;
     public SrcPoint srcPointPrefab;
     public DstPoint dstPointPrefab;
+    public BombController bombPrefab;
     public ScoreWallController scoreWall;
     public bool playersReady = false;
     private List<SrcPoint> srcPointList = new List<SrcPoint>();
     private List<DstPoint> dstPointList = new List<DstPoint>();
+    private List<BombController> bombList = new List<BombController>();
     private List<DstPoint> touchEnterDstPoint = new List<DstPoint>();
     private List<Vector2> srcPointPos = new List<Vector2>();
     private List<GuideLine> guideLineList = new List<GuideLine>();
+    private int currentGameLevel = 0;
+
+    GameLevelManager gameLevelManager = new GameLevelManager();
 
     List<Color> colors = new List<Color> { Color.blue, Color.yellow, Color.green, Color.red };
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("width:" + Screen.width + " height:" + Screen.height);
         generateSrcPointPos(playerCount);
 
         // 生成原始点
         generateSrcPoint();
 
+        StartLevel(currentGameLevel);
 
-        // 生成目标点
-        generateDstPoint();
+        //// 生成目标点
+        //generateDstPoint();
 
-        generateGuideLine();
+        //generateGuideLine();
 
         //for (int i = 0; i < playerCount; i++)
         //{
@@ -279,37 +284,18 @@ public class GameManager : MonoBehaviour
 
             if (touchEnterDstPoint.Count == playerCount)
             {
-                // 进入下一关，重新开始计时，DstPoint重新生成位置，计算积分。
-                foreach (GuideLine guideLine in guideLineList)
-                {
-                    Destroy(guideLine);
-                }
-
-                foreach (DstPoint _dstPoint in dstPointList)
-                {
-                    Destroy(_dstPoint);
-                }
-
-                scoreWall.resetCountdown();
-                scoreWall.AddScore(3);
-
-                guideLineList.Clear();
-                dstPointList.Clear();
-                generateDstPoint();
-
-
-                generateGuideLine();
+                LevelSuccess(currentGameLevel);
+                StopLevel(currentGameLevel);
+                StartLevel(++currentGameLevel);
             }
         }
-
-
     }
 
     public void dstPointTouchExit(SrcPoint srcPoint, DstPoint dstPoint)
     {
         if (srcPoint.srcPointId == dstPoint.dstPointId)
         {
-            touchEnterDstPoint.RemoveAt(touchEnterDstPoint.IndexOf(dstPoint));
+            touchEnterDstPoint.Remove(dstPoint);
             dstPoint.changeTouchState(DstPointTouchState.EXIT);
         }
     }
@@ -330,12 +316,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void generateDstPoint()
+    private void generateDstPoint(GameLevel gameLevel)
     {
-        // 生成目标点
-        for (int i = 0; i < playerCount; i++)
+        foreach (DstPointPosInfo dstPointPosInfo in gameLevel.dstPointPosInfos)
         {
-            generateRandDstPoint(i);
+            DstPoint dstPoint = Instantiate(dstPointPrefab, transform) as DstPoint;
+            dstPoint.name = "dstPoint" + dstPointPosInfo.dstPointId.ToString();
+            dstPoint.transform.position = screenToWorldPoint(dstPointPosInfo.pos);
+            dstPoint.dstPointId = dstPointPosInfo.dstPointId;
+            dstPoint.color = colors[dstPointPosInfo.dstPointId];
+
+            dstPointList.Add(dstPoint);
+            Debug.Log("dstPointList count: " + dstPointList.Count);
         }
     }
 
@@ -354,7 +346,22 @@ public class GameManager : MonoBehaviour
         Debug.Log("testGuideLine");
     }
 
-    private void generateGuideLine() 
+    private void generateBomb(GameLevel gameLevel)
+    {
+        foreach (BombPosInfo bombPosInfo in gameLevel.bombPosInfos)
+        {
+            BombController bomb = Instantiate(bombPrefab, transform) as BombController;
+            bomb.name = "bomb" + bombPosInfo.bombId.ToString();
+            bomb.transform.position = screenToWorldPoint(bombPosInfo.pos);
+            bomb.bombId = bombPosInfo.bombId;
+            bomb.color = colors[bombPosInfo.bombId];
+
+            bombList.Add(bomb);
+            Debug.Log("bombList count: " + dstPointList.Count);
+        }
+    }
+
+    private void generateGuideLine(GameLevel gameLevel) 
     {
         for (int i = 0; i < playerCount; i++)
         {
@@ -369,5 +376,63 @@ public class GameManager : MonoBehaviour
     {
         scoreWall.EduceBlood(1);
         //srcPoint.Invincible();
+    }
+
+    public void ReduceBloodHitBomb(SrcPoint srcPoint, BombController bombController)
+    {
+        scoreWall.EduceBlood(1);
+        Destroy(bombController);
+        //srcPoint.Invincible();
+    }
+
+    private void StartLevel(int levelIndex)
+    {
+        List<SrcPointPosInfo> srcPointPosInfos = new List<SrcPointPosInfo>();
+        foreach (SrcPoint srcPoint in srcPointList)
+        {
+            srcPointPosInfos.Add(srcPoint.GetPosInfo());
+        }
+
+        GameLevel gameLevel = gameLevelManager.GetGameLevel(levelIndex, srcPointPosInfos);
+
+        generateDstPoint(gameLevel);
+
+        generateGuideLine(gameLevel);
+
+        generateBomb(gameLevel);
+    }
+
+    private void StopLevel(int levelIndex)
+    {
+        // 进入下一关，重新开始计时，DstPoint重新生成位置，计算积分。
+        foreach (GuideLine guideLine in guideLineList)
+        {
+            Destroy(guideLine);
+        }
+
+        foreach (DstPoint dstPoint in dstPointList)
+        {
+            Destroy(dstPoint);
+        }
+
+        foreach (BombController bombController in bombList)
+        {
+            Destroy(bombController);
+        }
+
+        guideLineList.Clear();
+        dstPointList.Clear();
+        touchEnterDstPoint.Clear();
+    }
+
+    private void LevelSuccess(int levelIndex)
+    {
+        scoreWall.resetCountdown();
+        scoreWall.AddScore(3);
+    }
+
+    private void LevelFailed(int levelIndex)
+    {
+
     }
 }

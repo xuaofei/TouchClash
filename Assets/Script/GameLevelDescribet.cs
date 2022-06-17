@@ -13,6 +13,7 @@ public class GameLevelDescribet
     public int randomSeed = 0;
 
     public int playerCount;
-    public int minefieldCount;
+    public int bombCount;
+    //public int minefieldCount;
     //public MinefieldConfig minefieldConfig = new MinefieldConfig();
 }

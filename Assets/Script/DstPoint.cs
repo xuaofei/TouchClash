@@ -16,6 +16,13 @@ public enum DstPointTouchState
     EXIT             //原点和目标点未相碰
 }
 
+public struct DstPointPosInfo
+{
+    public int dstPointId;
+    // 位置
+    public Vector2 pos;
+};
+
 public class DstPoint : MonoBehaviour
 {
     // 委托声明

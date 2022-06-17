@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public delegate void GetSrcPoints();
+public delegate List<SrcPointPosInfo> GetSrcPointsPosDelegate();
 
 
 public struct MinefieldConfig
@@ -20,56 +20,60 @@ public class GameLevel
     public string levelName;
     public int levelIndex;
 
-    public List<Vector2> dstPointPos = new List<Vector2>();
-    public MinefieldConfig minefieldConfig = new MinefieldConfig();
+    public List<DstPointPosInfo> dstPointPosInfos;
+    public List<BombPosInfo> bombPosInfos;
 
-    public List<Candy> candies;
-    public List<Bullet> bullets;
-    public List<LaseRay> laseRays;
+    //public List<Vector2> dstPointPos = new List<Vector2>();
+    //public MinefieldConfig minefieldConfig = new MinefieldConfig();
 
-    public string bgMuisc;
+    //public List<Candy> candies;
+    //public List<Bullet> bullets;
+    //public List<LaseRay> laseRays;
 
-    public GetSrcPoints getSrcPointsFun;
+    //public string bgMuisc;
 
-    public GameLevel(GameLevelDescribet gameLevelDescribet)
-    {
-        int width = Screen.width;
-        int height = Screen.height;
+    public GetSrcPointsPosDelegate getSrcPointsPosDelegate;
 
-        if (0 == gameLevelDescribet.levelIndex)
-        {
-            levelName = "第一关";
-            Vector2 v1 = new Vector2(width / 2, height / 8);
-            Vector2 v2 = new Vector2(width / 8 * 7, height / 2);
-            Vector2 v3 = new Vector2(width / 8, height / 2);
-            dstPointPos.Add(v1);
-            dstPointPos.Add(v2);
-            dstPointPos.Add(v3);
+    //public GameLevel(GameLevelDescribet gameLevelDescribet)
+    //{
+    //    int width = Screen.width;
+    //    int height = Screen.height;
+
+    //    if (0 == gameLevelDescribet.levelIndex)
+    //    {
+    //        levelName = "第一关";
+    //        Vector2 v1 = new Vector2(width / 2, height / 8);
+    //        Vector2 v2 = new Vector2(width / 8 * 7, height / 2);
+    //        Vector2 v3 = new Vector2(width / 8, height / 2);
+    //        dstPointPos.Add(v1);
+    //        dstPointPos.Add(v2);
+    //        dstPointPos.Add(v3);
 
 
-        }
-        else
-        {
-            for(int i = 0;i < gameLevelDescribet.playerCount; i++)
-            {
-                Rect r;
-            }
-        }
+    //    }
+    //    else
+    //    {
 
-        minefieldConfig.minefieldCount = gameLevelDescribet.minefieldCount;
-        for (int i = 0; i < gameLevelDescribet.minefieldCount; i++)
-        {
-            System.Random random = new System.Random();
-            List<int> targetIds = new List<int>();
-            int targetCount = random.Next(1, 3);
-            for (int j = 0; j < targetCount; j++)
-            {
-                targetIds.Add(random.Next(1, gameLevelDescribet.playerCount));
-            }
-            minefieldConfig.minefieldTargets.Add(targetIds);
+    //        for(int i = 0;i < gameLevelDescribet.playerCount; i++)
+    //        {
+    //            Rect r;
+    //        }
+    //    }
 
-            int minefieldArea = random.Next((int)MinefieldArea.Area0, (int)MinefieldArea.Area7);
-            minefieldConfig.minefieldAreas.Add((MinefieldArea)minefieldArea);
-        }
-    }
+    //    minefieldConfig.minefieldCount = gameLevelDescribet.minefieldCount;
+    //    for (int i = 0; i < gameLevelDescribet.minefieldCount; i++)
+    //    {
+    //        System.Random random = new System.Random();
+    //        List<int> targetIds = new List<int>();
+    //        int targetCount = random.Next(1, 3);
+    //        for (int j = 0; j < targetCount; j++)
+    //        {
+    //            targetIds.Add(random.Next(1, gameLevelDescribet.playerCount));
+    //        }
+    //        minefieldConfig.minefieldTargets.Add(targetIds);
+
+    //        int minefieldArea = random.Next((int)MinefieldArea.Area0, (int)MinefieldArea.Area7);
+    //        minefieldConfig.minefieldAreas.Add((MinefieldArea)minefieldArea);
+    //    }
+    //}
 }

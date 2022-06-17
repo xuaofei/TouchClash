@@ -857,6 +857,8 @@ MonoBehaviour:
     type: 3}
   dstPointPrefab: {fileID: -3024754992106932151, guid: 78f4fbd66f8ab47e2b336a88ea34c0c5,
     type: 3}
+  bombPrefab: {fileID: 3212954642542878124, guid: d33eee484e3914d12b657ad645767c24,
+    type: 3}
   scoreWall: {fileID: 392243744}
   playersReady: 0
 --- !u!1001 &2110439047
@@ -875,6 +877,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Minefield
+      objectReference: {fileID: 0}
+    - target: {fileID: 8573031890864932208, guid: 86e7040c4898f4f94a5c39263855810b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8573031890864932214, guid: 86e7040c4898f4f94a5c39263855810b,
         type: 3}
