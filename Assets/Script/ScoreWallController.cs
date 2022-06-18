@@ -8,8 +8,12 @@ using System.Threading;
 public class ScoreWallController : MonoBehaviour
 {
     public Text score;
+    public Text blood;
     public Text countdown;
 
+    private int initBlood = 3;
+    private int maxBlood = 3;
+    private int currentBlood;
     private float totalDuration = 30.0f;
     private float costDuration = 0.0f;
     private int totalScore = 0;
@@ -24,6 +28,9 @@ public class ScoreWallController : MonoBehaviour
         {
             gameManager = map.GetComponent<GameManager>();
         }
+
+        currentBlood = initBlood;
+        blood.text = currentBlood.ToString();
 
         score.text = "0";
         countdown.text = totalDuration.ToString("f0");
@@ -70,25 +77,26 @@ public class ScoreWallController : MonoBehaviour
 
     public void AddBlood(int num)
     {
-        //totalScore += num;
+        currentBlood += num;
+        if (currentBlood > maxBlood)
+        {
+            currentBlood = maxBlood;
+        }
 
-        //score.text = totalScore.ToString();
-
-        //Debug.Log("xaf currentThread:" + Thread.CurrentThread.ManagedThreadId.ToString());
-
+        blood.text = currentBlood.ToString();
     }
 
     public void EduceBlood(int num)
     {
-        //totalScore -= num;
+        currentBlood -= num;
+        if (currentBlood <= 0)
+        {
+            currentBlood = 0;
+            gameManager.CountDownGameOver();
+        }
 
-        //score.text = totalScore.ToString();
-
-        //Debug.Log("xaf currentThread:" + Thread.CurrentThread.ManagedThreadId.ToString());
-        //score.rectTransform.rect;
+        blood.text = currentBlood.ToString();
     }
-
-
 
     public Vector2 getScoreWallWorldPos()
     {
