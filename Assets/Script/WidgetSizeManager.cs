@@ -22,8 +22,6 @@ public class WidgetSizeManager
         }
     }
 
-
-    //private static readonly WidgetSizeManager instance = new WidgetSizeManager();
     private WidgetSizeManager()
     {
         int width = Screen.width;
@@ -31,14 +29,8 @@ public class WidgetSizeManager
 
         srcPointRadius = width / 32;
         dstPointRadius = width / 32;
-        scoreWallRadius = width / 8;
+        scoreWallRadius = width / 16;
         bombRadius = width / 32;
     }
-
-
-    //public static WidgetSizeManager GetInstance()
-    //{
-    //    return instance;
-    //}
 }
 

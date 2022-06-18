@@ -9,28 +9,44 @@ public class ScoreWallController : MonoBehaviour
 {
     public Text score;
     public Text countdown;
-    public SpriteRenderer circleSprite;
 
-    private float totalDuration = 60.0f;
+    private float totalDuration = 30.0f;
     private float costDuration = 0.0f;
     private int totalScore = 0;
+    private UnityTimer.Timer countDownTimer;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
     {
+        GameObject map = GameObject.Find("map");
+        if (map)
+        {
+            gameManager = map.GetComponent<GameManager>();
+        }
+
         score.text = "0";
         countdown.text = totalDuration.ToString("f0");
+
+        countDownTimer = UnityTimer.Timer.Register(1f, ()=> {
+            float remainTime = totalDuration - (++costDuration);
+            if (remainTime >= 0.0f)
+            {
+                countdown.text = remainTime.ToString("f0");
+            }
+            else
+            {
+                countdown.text = "0";
+                CountDownOver();
+                countDownTimer = null;
+            }
+        }, isLooped: true);
     }
 
     // Update is called once per frame
     void Update()
     {
-        costDuration += Time.deltaTime;
-        float remainTime = totalDuration - costDuration;
-        if (remainTime >= 0.0f)
-        {
-            countdown.text = remainTime.ToString("f0");
-        }
+
     }
 
     public void AddScore(int num) {
@@ -76,7 +92,7 @@ public class ScoreWallController : MonoBehaviour
 
     public Vector2 getScoreWallWorldPos()
     {
-        Vector2 size = new Vector2(circleSprite.transform.position.x, circleSprite.transform.position.y);
+        Vector2 size = new Vector2(transform.position.x, transform.position.y);
         return size;
     }
 
@@ -84,7 +100,7 @@ public class ScoreWallController : MonoBehaviour
     {
         float pointScreenHeight = 0.0f;
         // 物体大小，摄像机大小，非屏幕大小。
-        Vector2 pointSize = circleSprite.GetComponent<SpriteRenderer>().bounds.size;
+        Vector2 pointSize = GetComponent<SpriteRenderer>().bounds.size;
         float cameraSize = Camera.main.orthographicSize;
         // 物体高度，屏幕大小。
         pointScreenHeight = Screen.height / (cameraSize * 2) * pointSize.y;
@@ -95,5 +111,12 @@ public class ScoreWallController : MonoBehaviour
     public void resetCountdown()
     {
         costDuration = 0.0f;
+    }
+
+
+    // 倒计时结束，游戏结束。
+    public void CountDownOver()
+    {
+        gameManager.CountDownGameOver();
     }
 }

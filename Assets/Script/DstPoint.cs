@@ -135,7 +135,7 @@ public class DstPoint : MonoBehaviour
         {
             if (gameManager)
             {
-                gameManager.dstPointTouchExit(srcPoint, this);
+                gameManager.DstPointTouchExit(srcPoint, this);
             }
         }
     }

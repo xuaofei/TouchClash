@@ -1,14 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public int playerCount = 3;
+    public ScoreWallController scoreWallPrefab;
     public SrcPoint srcPointPrefab;
     public DstPoint dstPointPrefab;
     public BombController bombPrefab;
-    public ScoreWallController scoreWall;
+    private ScoreWallController scoreWall;
     public bool playersReady = false;
     private List<SrcPoint> srcPointList = new List<SrcPoint>();
     private List<DstPoint> dstPointList = new List<DstPoint>();
@@ -17,7 +19,6 @@ public class GameManager : MonoBehaviour
     private List<Vector2> srcPointPos = new List<Vector2>();
     private List<GuideLine> guideLineList = new List<GuideLine>();
     private int currentGameLevel = 0;
-    private float pixelsPerUnit = 100f;
 
     GameLevelManager gameLevelManager;
 
@@ -29,30 +30,15 @@ public class GameManager : MonoBehaviour
         gameLevelManager = new GameLevelManager();
 
         Camera.main.orthographicSize = Screen.height / 100f / 2f;
-        generateSrcPointPos(playerCount);
+
+
+        GenerateScoreWall();
+        GenerateSrcPointPos(playerCount);
 
         // 生成原始点
-        generateSrcPoint();
+        GenerateSrcPoint();
 
         StartLevel(currentGameLevel);
-       
-
-        //// 生成目标点
-        //generateDstPoint();
-
-        //generateGuideLine();
-
-        //for (int i = 0; i < playerCount; i++)
-        //{
-        //    DstPoint dstPoint = Instantiate(dstPointPrefab, transform) as DstPoint;
-        //    dstPoint.name = "dstPoint" + i.ToString();
-        //    Vector2 srtPointPos = new Vector2(2.0f * i, 4.0f);
-        //    dstPoint.transform.position = srtPointPos;
-        //    dstPoint.dstPointId = i;
-        //    dstPoint.color = colors[i];
-
-        //    dstPointList.Add(dstPoint);
-        //}
     }
 
     // Update is called once per frame
@@ -64,7 +50,7 @@ public class GameManager : MonoBehaviour
 
             if (t.phase == TouchPhase.Began)
             {
-                Vector2 touchPos = screenToWorldPoint(t.position);
+                Vector2 touchPos = ScreenToWorldPoint(t.position);
 
                 RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.zero);
                 if (hit.collider)
@@ -99,7 +85,7 @@ public class GameManager : MonoBehaviour
                 if (srcPoint && srcPoint.canMove())
                 {
                     Debug.Log("touch moving:" + srcPoint.name);
-                    srcPoint.transform.position = screenToWorldPoint(t.position);
+                    srcPoint.transform.position = ScreenToWorldPoint(t.position);
                 }
 
                 //Debug.Log("touch pos:" + t.position.ToString());
@@ -115,13 +101,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    Vector2 screenToWorldPoint(Vector2 screenPosition)
+    Vector2 ScreenToWorldPoint(Vector2 screenPosition)
     {
         Camera camera = Camera.main;
         return camera.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, transform.position.z));
     }
 
-    Vector2 worldToScreenPoint(Vector2 worldPosition)
+    Vector2 WorldToScreenPoint(Vector2 worldPosition)
     {
         Camera camera = Camera.main;
         return camera.WorldToScreenPoint(new Vector3(worldPosition.x, worldPosition.y, transform.position.z));
@@ -139,7 +125,7 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    private void generateSrcPointPos(int playerCount)
+    private void GenerateSrcPointPos(int playerCount)
     {
         for (int i = 0; i < playerCount; i++)
         {
@@ -162,12 +148,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void removeDstPoint(DstPoint dstPoint)
+    public void RemoveDstPoint(DstPoint dstPoint)
     {
         dstPointList.RemoveAt(dstPointList.IndexOf(dstPoint));
     }
 
-    public void generateRandDstPoint(int dstPointId)
+    public void GenerateRandDstPoint(int dstPointId)
     {
         int safeSpace = 0;
         do
@@ -185,9 +171,7 @@ public class GameManager : MonoBehaviour
             foreach (SrcPoint _srcPoint in srcPointList)
             {
                 Vector2 srcPointPos = new Vector2(_srcPoint.transform.position.x, _srcPoint.transform.position.y);
-                srcPointPos = worldToScreenPoint(srcPointPos);
-
-                
+                srcPointPos = WorldToScreenPoint(srcPointPos);
 
                 float distance = (srcPointPos - newDstPointPos).magnitude;
 
@@ -216,7 +200,7 @@ public class GameManager : MonoBehaviour
             foreach (DstPoint _dstPoint in dstPointList)
             {
                 Vector2 dstPointPos = new Vector2(_dstPoint.transform.position.x, _dstPoint.transform.position.y);
-                dstPointPos = worldToScreenPoint(dstPointPos);
+                dstPointPos = WorldToScreenPoint(dstPointPos);
 
                 float distance = (dstPointPos - newDstPointPos).magnitude;
                 Debug.Log("xaf pos _dstPoint:" + dstPointPos.ToString() + "distance:" + distance);
@@ -230,7 +214,7 @@ public class GameManager : MonoBehaviour
 
             Vector2 scoreWallWorldPos = scoreWall.getScoreWallWorldPos();
             float circleWallScreenRadius = scoreWall.getScoreWallScreenRadius();
-            scoreWallWorldPos = worldToScreenPoint(scoreWallWorldPos);
+            scoreWallWorldPos = WorldToScreenPoint(scoreWallWorldPos);
 
             float distanceScoreWall = (scoreWallWorldPos - newDstPointPos).magnitude;
             if (distanceScoreWall < (srcPointScreenRadius + circleWallScreenRadius) * 1.5)
@@ -240,7 +224,7 @@ public class GameManager : MonoBehaviour
 
             DstPoint dstPoint = Instantiate(dstPointPrefab, transform) as DstPoint;
             dstPoint.name = "dstPoint" + dstPointId.ToString();
-            dstPoint.transform.position = screenToWorldPoint(newDstPointPos);
+            dstPoint.transform.position = ScreenToWorldPoint(newDstPointPos);
             dstPoint.dstPointId = dstPointId;
             dstPoint.color = colors[dstPointId];
 
@@ -248,11 +232,11 @@ public class GameManager : MonoBehaviour
             Debug.Log("dstPointList count: " + dstPointList.Count);
             return;
 
-            reGenerate:
+        reGenerate:
             {
                 Debug.Log("xaf reGenerate dst point");
             };
-            
+
         } while (true);
 
     }
@@ -280,7 +264,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void dstPointTouchEnter(SrcPoint srcPoint, DstPoint dstPoint)
+    public void DstPointTouchEnter(SrcPoint srcPoint, DstPoint dstPoint)
     {
         if (srcPoint.srcPointId == dstPoint.dstPointId)
         {
@@ -296,7 +280,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void dstPointTouchExit(SrcPoint srcPoint, DstPoint dstPoint)
+    public void DstPointTouchExit(SrcPoint srcPoint, DstPoint dstPoint)
     {
         if (srcPoint.srcPointId == dstPoint.dstPointId)
         {
@@ -305,14 +289,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void generateSrcPoint()
+    private void GenerateScoreWall()
+    {
+        scoreWall = Instantiate(scoreWallPrefab, transform) as ScoreWallController;
+        scoreWall.name = "scoreWall";
+        scoreWall.transform.position = new Vector2(0f, 0f);
+        float screenRadius = scoreWall.getScoreWallScreenRadius();
+        float scale = WidgetSizeManager.Instance.scoreWallRadius / screenRadius;
+        scoreWall.transform.localScale = new Vector3(scale, scale, 1f);
+    }
+    private void GenerateSrcPoint()
     {
         // 生成目标点
         for (int i = 0; i < playerCount; i++)
         {
             SrcPoint srcPoint = Instantiate(srcPointPrefab, transform) as SrcPoint;
             srcPoint.name = "srcPoint_" + i.ToString();
-            Vector2 srtPointPos = screenToWorldPoint(srcPointPos[i]);
+            Vector2 srtPointPos = ScreenToWorldPoint(srcPointPos[i]);
             srcPoint.transform.position = srtPointPos;
             srcPoint.srcPointId = i;
             srcPoint.color = colors[i];
@@ -320,20 +313,17 @@ public class GameManager : MonoBehaviour
             float scale = WidgetSizeManager.Instance.srcPointRadius / screenRadius; 
             srcPoint.transform.localScale = new Vector3(scale, scale, 1f);
 
-            int width = Screen.width;
-            int height = Screen.height;
-
             srcPointList.Add(srcPoint);
         }
     }
 
-    private void generateDstPoint(GameLevel gameLevel)
+    private void GenerateDstPoint(GameLevel gameLevel)
     {
         foreach (DstPointPosInfo dstPointPosInfo in gameLevel.dstPointPosInfos)
         {
             DstPoint dstPoint = Instantiate(dstPointPrefab, transform) as DstPoint;
             dstPoint.name = "dstPoint" + dstPointPosInfo.dstPointId.ToString();
-            dstPoint.transform.position = screenToWorldPoint(dstPointPosInfo.pos);
+            dstPoint.transform.position = ScreenToWorldPoint(dstPointPosInfo.pos);
             dstPoint.dstPointId = dstPointPosInfo.dstPointId;
             dstPoint.color = colors[dstPointPosInfo.dstPointId];
             float screenRadius = dstPoint.getPointScreenRadius();
@@ -345,7 +335,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void testGuideLine(SrcPoint srcPoint, DstPoint dstPoint)
+    private void TestGuideLine(SrcPoint srcPoint, DstPoint dstPoint)
     {
         GameObject go = new GameObject();
         go.name = "GuideLine";
@@ -360,13 +350,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("testGuideLine");
     }
 
-    private void generateBomb(GameLevel gameLevel)
+    private void GenerateBomb(GameLevel gameLevel)
     {
         foreach (BombPosInfo bombPosInfo in gameLevel.bombPosInfos)
         {
             BombController bomb = Instantiate(bombPrefab, transform) as BombController;
             bomb.name = "bomb" + bombPosInfo.bombId.ToString();
-            bomb.transform.position = screenToWorldPoint(bombPosInfo.pos);
+            bomb.transform.position = ScreenToWorldPoint(bombPosInfo.pos);
             bomb.bombId = bombPosInfo.bombId;
             bomb.color = colors[bombPosInfo.bombId];
 
@@ -379,14 +369,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void generateGuideLine(GameLevel gameLevel) 
+    private void GenerateGuideLine(GameLevel gameLevel) 
     {
         for (int i = 0; i < playerCount; i++)
         {
             DstPoint dstPoint = dstPointList[i];
             SrcPoint srcPoint = srcPointList[i];
 
-            testGuideLine(srcPoint, dstPoint);
+            TestGuideLine(srcPoint, dstPoint);
         }
     }
 
@@ -413,11 +403,11 @@ public class GameManager : MonoBehaviour
 
         GameLevel gameLevel = gameLevelManager.GetGameLevel(levelIndex, srcPointPosInfos);
 
-        generateDstPoint(gameLevel);
+        GenerateDstPoint(gameLevel);
 
-        generateGuideLine(gameLevel);
+        GenerateGuideLine(gameLevel);
 
-        generateBomb(gameLevel);
+        GenerateBomb(gameLevel);
     }
 
     private void StopLevel(int levelIndex)
@@ -452,5 +442,10 @@ public class GameManager : MonoBehaviour
     private void LevelFailed(int levelIndex)
     {
 
+    }
+
+    public void CountDownGameOver()
+    {
+        SceneManager.LoadScene(0);
     }
 }

@@ -110,7 +110,7 @@ public class SrcPoint : MonoBehaviour
         DstPoint dstPoint = collision.GetComponent<DstPoint>();
         if (dstPoint)
         {
-             gameManager.dstPointTouchEnter(this, dstPoint);
+             gameManager.DstPointTouchEnter(this, dstPoint);
         }
 
         MinefieldController minefieldController = collision.GetComponent<MinefieldController>();
@@ -153,7 +153,7 @@ public class SrcPoint : MonoBehaviour
         DstPoint dstPoint = collision.GetComponent<DstPoint>();
         if (dstPoint)
         {
-            gameManager.dstPointTouchExit(this, dstPoint);
+            gameManager.DstPointTouchExit(this, dstPoint);
         }
     }
 
