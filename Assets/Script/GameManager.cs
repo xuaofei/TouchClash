@@ -446,6 +446,6 @@ public class GameManager : MonoBehaviour
 
     public void CountDownGameOver()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
     }
 }

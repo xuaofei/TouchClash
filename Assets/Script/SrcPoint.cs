@@ -125,7 +125,10 @@ public class SrcPoint : MonoBehaviour
 
             // 加入免疫列表
             immuneTargetList.Add(minefieldController.minefieldName);
+            Handheld.Vibrate();
             Debug.Log("xaf immuneTarge add:" + minefieldController.minefieldName);
+
+            gameManager.ReduceBloodHitMinefield(this);
 
             // 开启免疫倒计时
             UnityTimer.Timer timer = UnityTimer.Timer.Register(immuneDuration, ()=> {
@@ -133,9 +136,6 @@ public class SrcPoint : MonoBehaviour
 
                 Debug.Log("xaf immuneTarge Remove:" + minefieldController.minefieldName);
             });
-
-
-            gameManager.ReduceBloodHitMinefield(this);
         }
 
 
@@ -143,6 +143,7 @@ public class SrcPoint : MonoBehaviour
         if (bombController)
         {
             gameManager.ReduceBloodHitBomb(this, bombController);
+            Handheld.Vibrate();
         }
     }
 
