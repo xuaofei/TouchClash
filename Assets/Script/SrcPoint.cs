@@ -33,6 +33,7 @@ public class SrcPoint : MonoBehaviour
     public int srcPointId;                  //dstPointId相同
     public Color color;
     public float immuneDuration = 2.0f;
+
     List<string> immuneTargetList = new List<string>();
 
     private GameManager gameManager;
@@ -110,7 +111,8 @@ public class SrcPoint : MonoBehaviour
         DstPoint dstPoint = collision.GetComponent<DstPoint>();
         if (dstPoint)
         {
-             gameManager.DstPointTouchEnter(this, dstPoint);
+            gameManager.DstPointTouchEnter(this, dstPoint);
+      
         }
 
         MinefieldController minefieldController = collision.GetComponent<MinefieldController>();
@@ -144,6 +146,7 @@ public class SrcPoint : MonoBehaviour
         {
             gameManager.ReduceBloodHitBomb(this, bombController);
             Handheld.Vibrate();
+            
         }
     }
 

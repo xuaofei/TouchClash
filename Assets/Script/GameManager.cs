@@ -10,6 +10,11 @@ public class GameManager : MonoBehaviour
     public SrcPoint srcPointPrefab;
     public DstPoint dstPointPrefab;
     public BombController bombPrefab;
+
+    public AudioSource triggerDstPointMusic;
+    public AudioSource triggerBobmMusic;
+    public AudioSource levelSuccessMusic;
+
     private ScoreWallController scoreWall;
     public bool playersReady = false;
     private List<SrcPoint> srcPointList = new List<SrcPoint>();
@@ -276,6 +281,12 @@ public class GameManager : MonoBehaviour
                 LevelSuccess(currentGameLevel);
                 StopLevel(currentGameLevel);
                 StartLevel(++currentGameLevel);
+
+                levelSuccessMusic.Play();
+            }
+            else
+            {
+                triggerDstPointMusic.Play();
             }
         }
     }
@@ -390,6 +401,7 @@ public class GameManager : MonoBehaviour
     {
         scoreWall.EduceBlood(1);
         Destroy(bombController);
+        triggerBobmMusic.Play();
         //srcPoint.Invincible();
     }
 
