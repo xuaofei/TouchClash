@@ -148,6 +148,12 @@ public class SrcPoint : MonoBehaviour
             Handheld.Vibrate();
             
         }
+
+        CandyController candyController = collision.GetComponent<CandyController>();
+        if (candyController)
+        {
+            gameManager.AddBloodHitCandy(this, candyController);
+        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)

@@ -25,6 +25,7 @@ public class GameLevelManager
         GameLevelDescribet gameLevelDescribet = new GameLevelDescribet();
         gameLevelDescribet.playerCount = 3;
         gameLevelDescribet.bombCount = 2;
+        gameLevelDescribet.candyCount = 1;
 
         GameLevel gameLevel = new GameLevel();
         gameLevel.levelIndex = currentLevel;
@@ -47,6 +48,15 @@ public class GameLevelManager
             bombPosInfos.Add(generateRandomBomb(i, srcPointPosInfos, dstPointPosInfos, bombPosInfos));
         }
         gameLevel.bombPosInfos = bombPosInfos;
+
+
+        // 生成糖果坐标
+        List<CandyPosInfo> candyPosInfos = new List<CandyPosInfo>();
+        for (int i = 0; i < gameLevelDescribet.candyCount; i++)
+        {
+            candyPosInfos.Add(generateRandomCandy(i, srcPointPosInfos, dstPointPosInfos, bombPosInfos));
+        }
+        gameLevel.candyPosInfos = candyPosInfos;
 
         return gameLevel;
     }
@@ -214,6 +224,87 @@ public class GameLevelManager
         reGenerate:
             {
                 Debug.Log("reGenerate bomb");
+            };
+
+        } while (true);
+    }
+
+    private CandyPosInfo generateRandomCandy(int candyId, List<SrcPointPosInfo> srcPointPosInfos, List<DstPointPosInfo> dstPointPosInfos, List<BombPosInfo> bombPosInfos)
+    {
+        int safeSpace = 0;
+        do
+        {
+            System.Random rd = RandomSystem.GetInstance().candyRandom;
+            float candyRadius = widgetSizeManager.candyRadius;
+            float srcPointRadius = widgetSizeManager.srcPointRadius;
+            float dstPointRadius = widgetSizeManager.dstPointRadius;
+            float scoreWallRadius = widgetSizeManager.scoreWallRadius;
+            float bombRadius = widgetSizeManager.bombRadius;
+            safeSpace = ((int)candyRadius) + 20;
+
+            int xPos = rd.Next(safeSpace, Screen.width - safeSpace);
+            int yPos = rd.Next(safeSpace, Screen.height - safeSpace);
+            Vector2 newCandyPos = new Vector2(xPos, yPos);
+
+            Debug.Log("xaf pos newCandyPos:" + newCandyPos.ToString() + "candyRadius:" + candyRadius);
+
+            foreach (SrcPointPosInfo _srcPointPosInfo in srcPointPosInfos)
+            {
+                Vector2 srcPointPos = _srcPointPosInfo.pos;
+                float distance = (srcPointPos - newCandyPos).magnitude;
+
+                if (distance < ((candyRadius + srcPointRadius) * 1.5f))
+                {
+                    // 两个点距离太小，重新生成位置。
+                    goto reGenerate;
+                }
+            }
+
+            foreach (DstPointPosInfo _dstPointPosInfo in dstPointPosInfos)
+            {
+                Vector2 dstPointPos = _dstPointPosInfo.pos;
+
+                float distance = (dstPointPos - newCandyPos).magnitude;
+                //Debug.Log("xaf pos _dstPoint:" + dstPointPos.ToString() + "distance:" + distance);
+
+                if (distance < ((candyRadius + dstPointRadius) * 1.5f))
+                {
+                    // 两个点距离太小，重新生成位置。
+                    goto reGenerate;
+                }
+            }
+
+            Vector2 scoreWallWorldPos = new Vector2(Screen.width / 2, Screen.height / 2);
+            float circleWallScreenRadius = widgetSizeManager.scoreWallRadius;
+
+            float distanceScoreWall = (scoreWallWorldPos - newCandyPos).magnitude;
+            if (distanceScoreWall < (candyRadius + circleWallScreenRadius + minSafeSpace))
+            {
+                goto reGenerate;
+            }
+
+
+            foreach (BombPosInfo _bombPosInfo in bombPosInfos)
+            {
+                Vector2 bombPos = _bombPosInfo.pos;
+
+                float distance = (bombPos - newCandyPos).magnitude;
+                if (distance < (Screen.width + Screen.height) / 8)
+                {
+                    // 两个点距离太小，重新生成位置。
+                    goto reGenerate;
+                }
+            }
+
+            CandyPosInfo candyPosInfo = new CandyPosInfo();
+            candyPosInfo.candyId = candyId;
+            candyPosInfo.pos = newCandyPos;
+
+            return candyPosInfo;
+
+        reGenerate:
+            {
+                Debug.Log("reGenerate Candy");
             };
 
         } while (true);

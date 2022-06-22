@@ -22,6 +22,7 @@ public class GameLevel
 
     public List<DstPointPosInfo> dstPointPosInfos;
     public List<BombPosInfo> bombPosInfos;
+    public List<CandyPosInfo> candyPosInfos;
 
     //public List<Vector2> dstPointPos = new List<Vector2>();
     //public MinefieldConfig minefieldConfig = new MinefieldConfig();

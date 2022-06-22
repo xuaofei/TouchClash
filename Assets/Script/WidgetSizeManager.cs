@@ -8,6 +8,7 @@ public class WidgetSizeManager
     public float dstPointRadius;
     public float scoreWallRadius;
     public float bombRadius;
+    public float candyRadius;
 
     static WidgetSizeManager instance;
     public static WidgetSizeManager Instance
@@ -31,6 +32,7 @@ public class WidgetSizeManager
         dstPointRadius = width / 32;
         scoreWallRadius = width / 16;
         bombRadius = width / 32;
+        candyRadius = width / 32;
     }
 }
 

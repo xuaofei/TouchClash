@@ -10,16 +10,19 @@ public class GameManager : MonoBehaviour
     public SrcPoint srcPointPrefab;
     public DstPoint dstPointPrefab;
     public BombController bombPrefab;
+    public CandyController candyPrefab;
 
     public AudioSource triggerDstPointMusic;
     public AudioSource triggerBobmMusic;
     public AudioSource levelSuccessMusic;
+    public AudioSource candyMusic;
 
     private ScoreWallController scoreWall;
     public bool playersReady = false;
     private List<SrcPoint> srcPointList = new List<SrcPoint>();
     private List<DstPoint> dstPointList = new List<DstPoint>();
     private List<BombController> bombList = new List<BombController>();
+    private List<CandyController> candyList = new List<CandyController>();
     private List<DstPoint> touchEnterDstPoint = new List<DstPoint>();
     private List<Vector2> srcPointPos = new List<Vector2>();
     private List<GuideLine> guideLineList = new List<GuideLine>();
@@ -376,7 +379,25 @@ public class GameManager : MonoBehaviour
             bomb.transform.localScale = new Vector3(scale, scale, 1f);
 
             bombList.Add(bomb);
-            Debug.Log("bombList count: " + dstPointList.Count);
+            Debug.Log("bombList count: " + bombList.Count);
+        }
+    }
+
+    private void GenerateCandy(GameLevel gameLevel)
+    {
+        foreach (CandyPosInfo candyPosInfo in gameLevel.candyPosInfos)
+        {
+            CandyController candy = Instantiate(candyPrefab, transform) as CandyController;
+            candy.name = "candy" + candyPosInfo.candyId.ToString();
+            candy.transform.position = ScreenToWorldPoint(candyPosInfo.pos);
+            candy.candyId = candyPosInfo.candyId;
+
+            float screenRadius = candy.getPointScreenRadius();
+            float scale = WidgetSizeManager.Instance.bombRadius / screenRadius;
+            candy.transform.localScale = new Vector3(scale, scale, 1f);
+
+            candyList.Add(candy);
+            Debug.Log("candyList count: " + candyList.Count);
         }
     }
 
@@ -389,6 +410,13 @@ public class GameManager : MonoBehaviour
 
             TestGuideLine(srcPoint, dstPoint);
         }
+    }
+
+    public void AddBloodHitCandy(SrcPoint srcPoint, CandyController candyController)
+    {
+        scoreWall.AddBlood(1);
+        Destroy(candyController);
+        candyMusic.Play();
     }
 
     public void ReduceBloodHitMinefield(SrcPoint srcPoint)
@@ -420,6 +448,8 @@ public class GameManager : MonoBehaviour
         GenerateGuideLine(gameLevel);
 
         GenerateBomb(gameLevel);
+
+        GenerateCandy(gameLevel);
     }
 
     private void StopLevel(int levelIndex)
@@ -435,13 +465,21 @@ public class GameManager : MonoBehaviour
             Destroy(dstPoint);
         }
 
+        foreach (CandyController candyController in candyList)
+        {
+            Destroy(candyController);
+        }
+
         foreach (BombController bombController in bombList)
         {
             Destroy(bombController);
         }
 
+
         guideLineList.Clear();
         dstPointList.Clear();
+        candyList.Clear();
+        bombList.Clear();
         touchEnterDstPoint.Clear();
     }
 
