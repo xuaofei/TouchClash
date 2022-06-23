@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public SrcPoint srcPointPrefab;
     public DstPoint dstPointPrefab;
     public BombController bombPrefab;
+    public BombController cherryPrefab;
     public CandyController candyPrefab;
 
     public AudioSource triggerDstPointMusic;
@@ -368,7 +369,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (BombPosInfo bombPosInfo in gameLevel.bombPosInfos)
         {
-            BombController bomb = Instantiate(bombPrefab, transform) as BombController;
+            BombController bomb = Instantiate(cherryPrefab, transform) as BombController;
             bomb.name = "bomb" + bombPosInfo.bombId.ToString();
             bomb.transform.position = ScreenToWorldPoint(bombPosInfo.pos);
             bomb.bombId = bombPosInfo.bombId;

@@ -583,12 +583,14 @@ MonoBehaviour:
     type: 3}
   bombPrefab: {fileID: 3212954642542878124, guid: d33eee484e3914d12b657ad645767c24,
     type: 3}
+  cherryPrefab: {fileID: -7454407042364704901, guid: 8ac2816f8fdc44699a9e7ef1564da774,
+    type: 3}
   candyPrefab: {fileID: 5296043377850319691, guid: 1cd5d60cfcf7549b8a96a44fa152d956,
     type: 3}
   triggerDstPointMusic: {fileID: 1754721029}
   triggerBobmMusic: {fileID: 1754721026}
   levelSuccessMusic: {fileID: 1754721028}
-  candyMusic: {fileID: 1754721030}
+  candyMusic: {fileID: 0}
   playersReady: 0
 --- !u!82 &1754721028
 AudioSource:
