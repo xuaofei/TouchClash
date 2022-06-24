@@ -590,7 +590,7 @@ MonoBehaviour:
   triggerDstPointMusic: {fileID: 1754721029}
   triggerBobmMusic: {fileID: 1754721026}
   levelSuccessMusic: {fileID: 1754721028}
-  candyMusic: {fileID: 0}
+  candyMusic: {fileID: 1754721030}
   playersReady: 0
 --- !u!82 &1754721028
 AudioSource:

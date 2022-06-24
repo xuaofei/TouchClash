@@ -31,11 +31,13 @@ public class GameManager : MonoBehaviour
 
     GameLevelManager gameLevelManager;
 
-    List<Color> colors = new List<Color> { Color.blue, Color.yellow, Color.green, Color.red };
+    List<Color> colors = new List<Color> { Color.blue, Color.yellow, Color.green, Color.red , Color.magenta, Color.cyan};
 
     // Start is called before the first frame update
     void Start()
     {
+        playerCount = GameSceneParam.Instance.playerCount;
+
         gameLevelManager = new GameLevelManager();
 
         Camera.main.orthographicSize = Screen.height / 100f / 2f;
@@ -136,24 +138,27 @@ public class GameManager : MonoBehaviour
 
     private void GenerateSrcPointPos(int playerCount)
     {
-        for (int i = 0; i < playerCount; i++)
+        if (playerCount >= 3 && playerCount <= 4)
         {
-            if (i == 0)
-            {
-                srcPointPos.Add(new Vector2(Screen.width / 4, Screen.height / 2));
-            }
-            else if (i == 1)
-            {
-                srcPointPos.Add(new Vector2(Screen.width / 2, Screen.height / 4 * 3));
-            }
-            else if (i == 2)
-            {
-                srcPointPos.Add(new Vector2(Screen.width / 4 * 3, Screen.height / 2));
-            }
-            else if (i == 3)
-            {
-                srcPointPos.Add(new Vector2(Screen.width / 4, Screen.height / 4 * 3));
-            }
+            srcPointPos.Add(new Vector2(Screen.width / 4, Screen.height / 2));
+
+            srcPointPos.Add(new Vector2(Screen.width / 2, Screen.height / 4 * 3));
+
+            srcPointPos.Add(new Vector2(Screen.width / 4 * 3, Screen.height / 2));
+
+            srcPointPos.Add(new Vector2(Screen.width / 2, Screen.height / 4));
+        }
+        else if (playerCount == 5)
+        {
+            srcPointPos.Add(new Vector2(Screen.width / 4, Screen.height / 6 * 5));
+
+            srcPointPos.Add(new Vector2(Screen.width / 4 * 3, Screen.height / 6 * 5));
+
+            srcPointPos.Add(new Vector2(Screen.width / 4, Screen.height / 2));
+
+            srcPointPos.Add(new Vector2(Screen.width / 4 * 3, Screen.height / 2));
+
+            srcPointPos.Add(new Vector2(Screen.width / 2, Screen.height / 6));
         }
     }
 

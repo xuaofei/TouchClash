@@ -5,9 +5,34 @@ using UnityEngine.SceneManagement;
 
 public class MainViewController : MonoBehaviour
 {
-    public void PlayGame()
+    public void ThreePlayerGame()
     {
+        GameSceneParam.Instance.gamePlayerType = GamePlayerType.LOCAL;
+        GameSceneParam.Instance.playerCount = 3;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
-        Debug.Log("Button Clicked. TestClick.");
+        Debug.Log("ThreePlayerGame Clicked.");
+    }
+
+    public void FourPlayerGame()
+    {
+        GameSceneParam.Instance.gamePlayerType = GamePlayerType.LOCAL;
+        GameSceneParam.Instance.playerCount = 4;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Debug.Log("FourPlayerGame Clicked.");
+    }
+
+    public void FivePlayerGame()
+    {
+        GameSceneParam.Instance.gamePlayerType = GamePlayerType.LOCAL;
+        GameSceneParam.Instance.playerCount = 5;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Debug.Log("FivePlayerGame Clicked.");
+    }
+
+    public void OnlinePlayerGame()
+    {
+        GameSceneParam.Instance.gamePlayerType = GamePlayerType.ONLINE;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Debug.Log("OnlinePlayerGame Clicked.");
     }
 }

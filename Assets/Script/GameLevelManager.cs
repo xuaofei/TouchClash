@@ -23,7 +23,7 @@ public class GameLevelManager
     public GameLevel GetGameLevel(int currentLevel, List<SrcPointPosInfo> srcPointPosInfos)
     {
         GameLevelDescribet gameLevelDescribet = new GameLevelDescribet();
-        gameLevelDescribet.playerCount = 3;
+        gameLevelDescribet.playerCount = GameSceneParam.Instance.playerCount;
         gameLevelDescribet.bombCount = 2;
         gameLevelDescribet.candyCount = 1;
 
