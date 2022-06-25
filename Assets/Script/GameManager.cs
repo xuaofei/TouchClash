@@ -42,8 +42,8 @@ public class GameManager : MonoBehaviour
 
         Camera.main.orthographicSize = Screen.height / 100f / 2f;
 
-
         GenerateScoreWall();
+
         GenerateSrcPointPos(playerCount);
 
         // 生成原始点
