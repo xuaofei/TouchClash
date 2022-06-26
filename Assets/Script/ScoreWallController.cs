@@ -14,16 +14,17 @@ public class ScoreWallController : MonoBehaviour
     private int initBlood = 3;
     private int maxBlood = 3;
     private int currentBlood;
-    private float totalDuration = 30.0f;
+    private float levelDuration = 30.0f;
     private float costDuration = 0.0f;
     private int totalScore = 0;
     private UnityTimer.Timer countDownTimer;
     private GameManager gameManager;
+    private List<int> groupPointTouched = new List<int>();
 
     // Start is called before the first frame update
     void Start()
     {
-        GameObject map = GameObject.Find("map");
+        GameObject map = GameObject.Find("foreground");
         if (map)
         {
             gameManager = map.GetComponent<GameManager>();
@@ -33,13 +34,16 @@ public class ScoreWallController : MonoBehaviour
         blood.text = currentBlood.ToString();
 
         score.text = "0";
-        countdown.text = totalDuration.ToString("f0");
+
+        countdown.text = levelDuration.ToString("f0");
 
         countDownTimer = UnityTimer.Timer.Register(1f, ()=> {
-            float remainTime = totalDuration - (++costDuration);
+            float remainTime = levelDuration - (++costDuration);
             if (remainTime >= 0.0f)
             {
                 countdown.text = remainTime.ToString("f0");
+                // 存活情况下，每秒获得一分。
+                totalScore += 1;
             }
             else
             {
@@ -47,7 +51,11 @@ public class ScoreWallController : MonoBehaviour
                 CountDownOver();
                 countDownTimer = null;
             }
+
+            score.text = totalScore.ToString();
+            blood.text = currentBlood.ToString();
         }, isLooped: true);
+
     }
 
     // Update is called once per frame
@@ -56,24 +64,21 @@ public class ScoreWallController : MonoBehaviour
 
     }
 
-    public void AddScore(int num) {
-        totalScore += num;
+    //public void AddScore(int num) {
+    //    totalScore += num;
 
-        score.text = totalScore.ToString();
+    //    //score.text = totalScore.ToString();
 
-        //Debug.Log("xaf currentThread:" + Thread.CurrentThread.ManagedThreadId.ToString());
+    //    //Debug.Log("xaf currentThread:" + Thread.CurrentThread.ManagedThreadId.ToString());
         
-    }
+    //}
 
-    public void EduceScore(int num)
-    {
-        totalScore -= num;
+    //public void EduceScore(int num)
+    //{
+    //    totalScore -= num;
+    //    //Debug.Log("xaf currentThread:" + Thread.CurrentThread.ManagedThreadId.ToString());
 
-        score.text = totalScore.ToString();
-
-        //Debug.Log("xaf currentThread:" + Thread.CurrentThread.ManagedThreadId.ToString());
-
-    }
+    //}
 
     public void AddBlood(int num)
     {
@@ -83,7 +88,9 @@ public class ScoreWallController : MonoBehaviour
             currentBlood = maxBlood;
         }
 
-        blood.text = currentBlood.ToString();
+        totalScore += 50;
+
+        //blood.text = currentBlood.ToString();
     }
 
     public void EduceBlood(int num)
@@ -95,7 +102,11 @@ public class ScoreWallController : MonoBehaviour
             gameManager.CountDownGameOver();
         }
 
-        blood.text = currentBlood.ToString();
+        totalScore -= 50;
+        if (totalScore < 0)
+        {
+            totalScore = 0;
+        }
     }
 
     public Vector2 getScoreWallWorldPos()
@@ -126,5 +137,30 @@ public class ScoreWallController : MonoBehaviour
     public void CountDownOver()
     {
         gameManager.CountDownGameOver();
+    }
+
+    public void EnterLevel(GameLevel gameLevel)
+    {
+        if (gameLevel.levelIndex > 0)
+        {
+            // 剩余时间3倍积分
+            float remainTime = levelDuration - (costDuration);
+            totalScore += (int)(remainTime * 2);
+
+            // 过关直接50分
+            totalScore += 50;
+        }
+
+        levelDuration = gameLevel.levelDuration;
+        groupPointTouched.Clear();
+    }
+
+    public void GroupPointTouch(SrcPoint srcPoint, DstPoint dstPoint)
+    {
+        if (!groupPointTouched.Contains(srcPoint.srcPointId))
+        {
+            totalScore += 20;
+            groupPointTouched.Add(srcPoint.srcPointId);
+        }        
     }
 }

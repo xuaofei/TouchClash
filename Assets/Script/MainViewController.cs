@@ -35,4 +35,16 @@ public class MainViewController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         Debug.Log("OnlinePlayerGame Clicked.");
     }
+
+    public void Ranking()
+    {
+        SceneManager.LoadScene("RankingScene");
+        Debug.Log("Ranking Clicked.");
+    }
+
+    public void Setting()
+    {
+        SceneManager.LoadScene("SettingScene");
+        Debug.Log("Setting Clicked.");
+    }
 }

@@ -36,7 +36,7 @@ public class MinefieldController : MonoBehaviour
         minefieldId = (int)minefieldArea;
         minefieldName = "minefield_" + minefieldId;
 
-        GameObject map = GameObject.Find("map");
+        GameObject map = GameObject.Find("foreground");
         if (map)
         {
             gameManager = map.GetComponent<GameManager>();

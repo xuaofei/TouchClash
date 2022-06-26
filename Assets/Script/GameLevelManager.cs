@@ -26,6 +26,7 @@ public class GameLevelManager
         gameLevelDescribet.playerCount = GameSceneParam.Instance.playerCount;
         gameLevelDescribet.bombCount = 2;
         gameLevelDescribet.candyCount = 1;
+        gameLevelDescribet.levelDuration = 60;
 
         GameLevel gameLevel = new GameLevel();
         gameLevel.levelIndex = currentLevel;
@@ -58,6 +59,7 @@ public class GameLevelManager
         }
         gameLevel.candyPosInfos = candyPosInfos;
 
+        gameLevel.levelDuration = gameLevelDescribet.levelDuration;
         return gameLevel;
     }
 

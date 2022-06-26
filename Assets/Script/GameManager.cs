@@ -154,9 +154,9 @@ public class GameManager : MonoBehaviour
 
             srcPointPos.Add(new Vector2(Screen.width / 4 * 3, Screen.height / 6 * 5));
 
-            srcPointPos.Add(new Vector2(Screen.width / 4, Screen.height / 2));
+            srcPointPos.Add(new Vector2(Screen.width / 8, Screen.height / 2));
 
-            srcPointPos.Add(new Vector2(Screen.width / 4 * 3, Screen.height / 2));
+            srcPointPos.Add(new Vector2(Screen.width / 8 * 7, Screen.height / 2));
 
             srcPointPos.Add(new Vector2(Screen.width / 2, Screen.height / 6));
         }
@@ -164,96 +164,96 @@ public class GameManager : MonoBehaviour
 
     public void RemoveDstPoint(DstPoint dstPoint)
     {
-        dstPointList.RemoveAt(dstPointList.IndexOf(dstPoint));
+        dstPointList.Remove(dstPoint);
     }
 
-    public void GenerateRandDstPoint(int dstPointId)
-    {
-        int safeSpace = 0;
-        do
-        {
-            System.Random rd = new System.Random();
-            float srcPointScreenRadius = getSrcPointScreenRadius();
-            safeSpace = ((int)srcPointScreenRadius) + 20;
+    //public void GenerateRandDstPoint(int dstPointId)
+    //{
+    //    int safeSpace = 0;
+    //    do
+    //    {
+    //        System.Random rd = new System.Random();
+    //        float srcPointScreenRadius = getSrcPointScreenRadius();
+    //        safeSpace = ((int)srcPointScreenRadius) + 20;
 
-            int xPos = rd.Next(safeSpace, Screen.width - safeSpace);
-            int yPos = rd.Next(safeSpace, Screen.height - safeSpace);
-            Vector2 newDstPointPos = new Vector2(xPos, yPos);
+    //        int xPos = rd.Next(safeSpace, Screen.width - safeSpace);
+    //        int yPos = rd.Next(safeSpace, Screen.height - safeSpace);
+    //        Vector2 newDstPointPos = new Vector2(xPos, yPos);
 
-            Debug.Log("xaf pos newDstPointPos:" + newDstPointPos.ToString() + "srcPointScreenRadius:" + srcPointScreenRadius);
+    //        Debug.Log("xaf pos newDstPointPos:" + newDstPointPos.ToString() + "srcPointScreenRadius:" + srcPointScreenRadius);
 
-            foreach (SrcPoint _srcPoint in srcPointList)
-            {
-                Vector2 srcPointPos = new Vector2(_srcPoint.transform.position.x, _srcPoint.transform.position.y);
-                srcPointPos = WorldToScreenPoint(srcPointPos);
+    //        foreach (SrcPoint _srcPoint in srcPointList)
+    //        {
+    //            Vector2 srcPointPos = new Vector2(_srcPoint.transform.position.x, _srcPoint.transform.position.y);
+    //            srcPointPos = WorldToScreenPoint(srcPointPos);
 
-                float distance = (srcPointPos - newDstPointPos).magnitude;
+    //            float distance = (srcPointPos - newDstPointPos).magnitude;
 
-                Debug.Log("xaf pos _srcPoint:" + srcPointPos.ToString() + "distance:" + distance);
+    //            Debug.Log("xaf pos _srcPoint:" + srcPointPos.ToString() + "distance:" + distance);
 
-                if (dstPointId == _srcPoint.srcPointId)
-                {
-                    // 原点和目标点是同一组,距离要求远一点。
-                    if (distance < ((Screen.width + Screen.height) / 4))
-                    {
-                        // 两个点直接距离小于1.5倍原点直径，重新生成位置。
-                        goto reGenerate;
-                    }
-                }
-                else
-                {
-                    // 原点和目标点不是同一组
-                    if (distance < (srcPointScreenRadius * 3))
-                    {
-                        // 两个点直接距离小于1.5倍原点直径，重新生成位置。
-                        goto reGenerate;
-                    }
-                }
-            }
+    //            if (dstPointId == _srcPoint.srcPointId)
+    //            {
+    //                // 原点和目标点是同一组,距离要求远一点。
+    //                if (distance < ((Screen.width + Screen.height) / 4))
+    //                {
+    //                    // 两个点直接距离小于1.5倍原点直径，重新生成位置。
+    //                    goto reGenerate;
+    //                }
+    //            }
+    //            else
+    //            {
+    //                // 原点和目标点不是同一组
+    //                if (distance < (srcPointScreenRadius * 3))
+    //                {
+    //                    // 两个点直接距离小于1.5倍原点直径，重新生成位置。
+    //                    goto reGenerate;
+    //                }
+    //            }
+    //        }
 
-            foreach (DstPoint _dstPoint in dstPointList)
-            {
-                Vector2 dstPointPos = new Vector2(_dstPoint.transform.position.x, _dstPoint.transform.position.y);
-                dstPointPos = WorldToScreenPoint(dstPointPos);
+    //        foreach (DstPoint _dstPoint in dstPointList)
+    //        {
+    //            Vector2 dstPointPos = new Vector2(_dstPoint.transform.position.x, _dstPoint.transform.position.y);
+    //            dstPointPos = WorldToScreenPoint(dstPointPos);
 
-                float distance = (dstPointPos - newDstPointPos).magnitude;
-                Debug.Log("xaf pos _dstPoint:" + dstPointPos.ToString() + "distance:" + distance);
+    //            float distance = (dstPointPos - newDstPointPos).magnitude;
+    //            Debug.Log("xaf pos _dstPoint:" + dstPointPos.ToString() + "distance:" + distance);
 
-                if (distance < (srcPointScreenRadius * 3))
-                {
-                    // 两个点直接距离小于1.5倍原点直径，重新生成位置。
-                    goto reGenerate;
-                }
-            }
+    //            if (distance < (srcPointScreenRadius * 3))
+    //            {
+    //                // 两个点直接距离小于1.5倍原点直径，重新生成位置。
+    //                goto reGenerate;
+    //            }
+    //        }
 
-            Vector2 scoreWallWorldPos = scoreWall.getScoreWallWorldPos();
-            float circleWallScreenRadius = scoreWall.getScoreWallScreenRadius();
-            scoreWallWorldPos = WorldToScreenPoint(scoreWallWorldPos);
+    //        Vector2 scoreWallWorldPos = scoreWall.getScoreWallWorldPos();
+    //        float circleWallScreenRadius = scoreWall.getScoreWallScreenRadius();
+    //        scoreWallWorldPos = WorldToScreenPoint(scoreWallWorldPos);
 
-            float distanceScoreWall = (scoreWallWorldPos - newDstPointPos).magnitude;
-            if (distanceScoreWall < (srcPointScreenRadius + circleWallScreenRadius) * 1.5)
-            {
-                goto reGenerate;
-            }
+    //        float distanceScoreWall = (scoreWallWorldPos - newDstPointPos).magnitude;
+    //        if (distanceScoreWall < (srcPointScreenRadius + circleWallScreenRadius) * 1.5)
+    //        {
+    //            goto reGenerate;
+    //        }
 
-            DstPoint dstPoint = Instantiate(dstPointPrefab, transform) as DstPoint;
-            dstPoint.name = "dstPoint" + dstPointId.ToString();
-            dstPoint.transform.position = ScreenToWorldPoint(newDstPointPos);
-            dstPoint.dstPointId = dstPointId;
-            dstPoint.color = colors[dstPointId];
+    //        DstPoint dstPoint = Instantiate(dstPointPrefab, transform) as DstPoint;
+    //        dstPoint.name = "dstPoint" + dstPointId.ToString();
+    //        dstPoint.transform.position = ScreenToWorldPoint(newDstPointPos);
+    //        dstPoint.dstPointId = dstPointId;
+    //        dstPoint.color = colors[dstPointId];
 
-            dstPointList.Add(dstPoint);
-            Debug.Log("dstPointList count: " + dstPointList.Count);
-            return;
+    //        dstPointList.Add(dstPoint);
+    //        Debug.Log("dstPointList count: " + dstPointList.Count);
+    //        return;
 
-        reGenerate:
-            {
-                Debug.Log("xaf reGenerate dst point");
-            };
+    //    reGenerate:
+    //        {
+    //            Debug.Log("xaf reGenerate dst point");
+    //        };
 
-        } while (true);
+    //    } while (true);
 
-    }
+    //}
 
     /// <summary>
     /// 获取原点的屏幕高度，原点和目标点一样大小
@@ -295,7 +295,9 @@ public class GameManager : MonoBehaviour
             }
             else
             {
+                scoreWall.GroupPointTouch(srcPoint, dstPoint);
                 triggerDstPointMusic.Play();
+                
             }
         }
     }
@@ -359,11 +361,12 @@ public class GameManager : MonoBehaviour
     {
         GameObject go = new GameObject();
         go.name = "GuideLine";
-        go.AddComponent<Rigidbody2D>();
+        // go.AddComponent<Rigidbody2D>();
         go.transform.SetParent(transform);
         GuideLine guideLine = go.AddComponent<GuideLine>();
         guideLine.srcPoint = srcPoint;
         guideLine.dstPoint = dstPoint;
+        // go.sortl
 
         guideLineList.Add(guideLine);
 
@@ -404,7 +407,14 @@ public class GameManager : MonoBehaviour
 
             candyList.Add(candy);
             Debug.Log("candyList count: " + candyList.Count);
+
+            candy.test = srcPointList[0];
         }
+    }
+
+    private void ScoreWallEnterLevel(GameLevel gameLevel)
+    {
+        scoreWall.EnterLevel(gameLevel);
     }
 
     private void GenerateGuideLine(GameLevel gameLevel) 
@@ -456,6 +466,8 @@ public class GameManager : MonoBehaviour
         GenerateBomb(gameLevel);
 
         GenerateCandy(gameLevel);
+
+        ScoreWallEnterLevel(gameLevel);
     }
 
     private void StopLevel(int levelIndex)
@@ -492,7 +504,7 @@ public class GameManager : MonoBehaviour
     private void LevelSuccess(int levelIndex)
     {
         scoreWall.resetCountdown();
-        scoreWall.AddScore(3);
+        //scoreWall.AddScore(3);
     }
 
     private void LevelFailed(int levelIndex)

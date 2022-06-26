@@ -9,7 +9,7 @@ public class GuideLine : MonoBehaviour
     public DstPoint dstPoint;
 
     //线条粗细
-    private float lineSize = 0.05f;
+    private float lineSize = 0.02f;
     private LineRenderer lr;
     //线条材质
     public Material material;
@@ -49,10 +49,7 @@ public class GuideLine : MonoBehaviour
     {
         lr = gameObject.AddComponent<LineRenderer>();
         lr.transform.SetParent(transform);
-
-        //");
-
-        //lr.material = new Material(Shader.Find(Shader.Find("UI/Unlit/Transparent")));
+        lr.sortingLayerName = "foreground";
 
 
         Shader sh = Shader.Find("UI/Unlit/Transparent");

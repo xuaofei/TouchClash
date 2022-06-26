@@ -19,6 +19,7 @@ public class GameLevel
 {
     public string levelName;
     public int levelIndex;
+    public int levelDuration;
 
     public List<DstPointPosInfo> dstPointPosInfos;
     public List<BombPosInfo> bombPosInfos;

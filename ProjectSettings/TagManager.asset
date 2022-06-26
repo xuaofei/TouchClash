@@ -14,7 +14,7 @@ TagManager:
   - 
   - 
   - background
-  - camera
+  - foreground
   - 
   - 
   - 
@@ -41,6 +41,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Point
+  - name: background
     uniqueID: 808272631
+    locked: 0
+  - name: foreground
+    uniqueID: 2183685831
     locked: 0

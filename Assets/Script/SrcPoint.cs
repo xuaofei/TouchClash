@@ -45,7 +45,7 @@ public class SrcPoint : MonoBehaviour
         movementState = SrcPointMovementState.IDLE;
         fingerId = -1;
 
-        GameObject map = GameObject.Find("map");
+        GameObject map = GameObject.Find("foreground");
         if (map)
         {
             gameManager = map.GetComponent<GameManager>();

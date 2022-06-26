@@ -15,6 +15,7 @@ public class GameLevelDescribet
     public int playerCount;
     public int bombCount;
     public int candyCount;
+    public int levelDuration;
     //public int minefieldCount;
     //public MinefieldConfig minefieldConfig = new MinefieldConfig();
 }

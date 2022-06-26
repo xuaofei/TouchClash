@@ -65,7 +65,7 @@ public class DstPoint : MonoBehaviour
         }
 
 
-        GameObject map = GameObject.Find("map");
+        GameObject map = GameObject.Find("foreground");
         if (map)
         {
             gameManager = map.GetComponent<GameManager>();
