@@ -27,10 +27,12 @@ public class CandyController : MonoBehaviour
     {
         DOTween.Init();
 
-        timer = UnityTimer.Timer.Register(0.5f, () =>
+        timer = UnityTimer.Timer.Register(3.5f, () =>
         {
+            Debug.Log("xaf 2 x:" + transform.position.x + " y:" + transform.position.y + " z:" + transform.position.z);
             //randMove();
         }, isLooped: true);
+
     }
 
     // Update is called once per frame
@@ -41,8 +43,9 @@ public class CandyController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.Translate((test.transform.position - transform.position).normalized * speed * Time.fixedDeltaTime);
-        //transform.R
+        transform.Translate((test.transform.position - transform.position).normalized * speed * Time.fixedDeltaTime, Space.World);
+        Vector3 v = (test.transform.position - transform.position).normalized;
+        transform.right = v;
     }
 
     private void OnDestroy()
