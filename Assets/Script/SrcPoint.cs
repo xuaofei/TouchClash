@@ -33,6 +33,7 @@ public class SrcPoint : MonoBehaviour
     public int srcPointId;                  //dstPointId相同
     public Color color;
     public float immuneDuration = 2.0f;
+    public EnemyBase enemyTarget;
 
     List<string> immuneTargetList = new List<string>();
 
@@ -56,6 +57,8 @@ public class SrcPoint : MonoBehaviour
         {
             sp.color = color;
         }
+
+        //attacked = false;
     }
 
     // Update is called once per frame

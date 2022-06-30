@@ -167,94 +167,6 @@ public class GameManager : MonoBehaviour
         dstPointList.Remove(dstPoint);
     }
 
-    //public void GenerateRandDstPoint(int dstPointId)
-    //{
-    //    int safeSpace = 0;
-    //    do
-    //    {
-    //        System.Random rd = new System.Random();
-    //        float srcPointScreenRadius = getSrcPointScreenRadius();
-    //        safeSpace = ((int)srcPointScreenRadius) + 20;
-
-    //        int xPos = rd.Next(safeSpace, Screen.width - safeSpace);
-    //        int yPos = rd.Next(safeSpace, Screen.height - safeSpace);
-    //        Vector2 newDstPointPos = new Vector2(xPos, yPos);
-
-    //        Debug.Log("xaf pos newDstPointPos:" + newDstPointPos.ToString() + "srcPointScreenRadius:" + srcPointScreenRadius);
-
-    //        foreach (SrcPoint _srcPoint in srcPointList)
-    //        {
-    //            Vector2 srcPointPos = new Vector2(_srcPoint.transform.position.x, _srcPoint.transform.position.y);
-    //            srcPointPos = WorldToScreenPoint(srcPointPos);
-
-    //            float distance = (srcPointPos - newDstPointPos).magnitude;
-
-    //            Debug.Log("xaf pos _srcPoint:" + srcPointPos.ToString() + "distance:" + distance);
-
-    //            if (dstPointId == _srcPoint.srcPointId)
-    //            {
-    //                // 原点和目标点是同一组,距离要求远一点。
-    //                if (distance < ((Screen.width + Screen.height) / 4))
-    //                {
-    //                    // 两个点直接距离小于1.5倍原点直径，重新生成位置。
-    //                    goto reGenerate;
-    //                }
-    //            }
-    //            else
-    //            {
-    //                // 原点和目标点不是同一组
-    //                if (distance < (srcPointScreenRadius * 3))
-    //                {
-    //                    // 两个点直接距离小于1.5倍原点直径，重新生成位置。
-    //                    goto reGenerate;
-    //                }
-    //            }
-    //        }
-
-    //        foreach (DstPoint _dstPoint in dstPointList)
-    //        {
-    //            Vector2 dstPointPos = new Vector2(_dstPoint.transform.position.x, _dstPoint.transform.position.y);
-    //            dstPointPos = WorldToScreenPoint(dstPointPos);
-
-    //            float distance = (dstPointPos - newDstPointPos).magnitude;
-    //            Debug.Log("xaf pos _dstPoint:" + dstPointPos.ToString() + "distance:" + distance);
-
-    //            if (distance < (srcPointScreenRadius * 3))
-    //            {
-    //                // 两个点直接距离小于1.5倍原点直径，重新生成位置。
-    //                goto reGenerate;
-    //            }
-    //        }
-
-    //        Vector2 scoreWallWorldPos = scoreWall.getScoreWallWorldPos();
-    //        float circleWallScreenRadius = scoreWall.getScoreWallScreenRadius();
-    //        scoreWallWorldPos = WorldToScreenPoint(scoreWallWorldPos);
-
-    //        float distanceScoreWall = (scoreWallWorldPos - newDstPointPos).magnitude;
-    //        if (distanceScoreWall < (srcPointScreenRadius + circleWallScreenRadius) * 1.5)
-    //        {
-    //            goto reGenerate;
-    //        }
-
-    //        DstPoint dstPoint = Instantiate(dstPointPrefab, transform) as DstPoint;
-    //        dstPoint.name = "dstPoint" + dstPointId.ToString();
-    //        dstPoint.transform.position = ScreenToWorldPoint(newDstPointPos);
-    //        dstPoint.dstPointId = dstPointId;
-    //        dstPoint.color = colors[dstPointId];
-
-    //        dstPointList.Add(dstPoint);
-    //        Debug.Log("dstPointList count: " + dstPointList.Count);
-    //        return;
-
-    //    reGenerate:
-    //        {
-    //            Debug.Log("xaf reGenerate dst point");
-    //        };
-
-    //    } while (true);
-
-    //}
-
     /// <summary>
     /// 获取原点的屏幕高度，原点和目标点一样大小
     /// </summary>
@@ -377,7 +289,7 @@ public class GameManager : MonoBehaviour
     {
         foreach (BombPosInfo bombPosInfo in gameLevel.bombPosInfos)
         {
-            BombController bomb = Instantiate(cherryPrefab, transform) as BombController;
+            BombController bomb = Instantiate(bombPrefab, transform) as BombController;
             bomb.name = "bomb" + bombPosInfo.bombId.ToString();
             bomb.transform.position = ScreenToWorldPoint(bombPosInfo.pos);
             bomb.bombId = bombPosInfo.bombId;
@@ -389,6 +301,9 @@ public class GameManager : MonoBehaviour
 
             bombList.Add(bomb);
             Debug.Log("bombList count: " + bombList.Count);
+
+            bomb.attackTarget = srcPointList[bombList.Count - 1];
+            bomb.speed = 0.2f;
         }
     }
 
@@ -407,8 +322,6 @@ public class GameManager : MonoBehaviour
 
             candyList.Add(candy);
             Debug.Log("candyList count: " + candyList.Count);
-
-            candy.test = srcPointList[0];
         }
     }
 

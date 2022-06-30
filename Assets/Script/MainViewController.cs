@@ -5,6 +5,11 @@ using UnityEngine.SceneManagement;
 
 public class MainViewController : MonoBehaviour
 {
+    private void Start()
+    {
+        //Application.targetFrameRate = 30;
+    }
+
     public void ThreePlayerGame()
     {
         GameSceneParam.Instance.gamePlayerType = GamePlayerType.LOCAL;
