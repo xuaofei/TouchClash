@@ -196,6 +196,7 @@ public class GameManager : MonoBehaviour
         {
             touchEnterDstPoint.Add(dstPoint);
             dstPoint.changeTouchState(DstPointTouchState.ENTER);
+            srcPoint.touchedDstPoint = true;
 
             if (touchEnterDstPoint.Count == playerCount)
             {
@@ -220,6 +221,7 @@ public class GameManager : MonoBehaviour
         {
             touchEnterDstPoint.Remove(dstPoint);
             dstPoint.changeTouchState(DstPointTouchState.EXIT);
+            srcPoint.touchedDstPoint = false;
         }
     }
 
@@ -303,7 +305,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("bombList count: " + bombList.Count);
 
             bomb.attackTarget = srcPointList[bombList.Count - 1];
-            bomb.speed = 0.2f;
+            bomb.speed = 0.3f;
         }
     }
 

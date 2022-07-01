@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 手指按压过
 public enum SrcPointActiveState
 {
     UNACTIVE,       //未激活状态
@@ -13,6 +14,12 @@ public enum SrcPointMovementState
     IDLE,           //手指松开，空闲状态
     RUN             //手指按住，移动状态
 }
+
+//public enum SrcPoint
+//{
+//    IDLE,           //手指松开，空闲状态
+//    RUN             //手指按住，移动状态
+//}
 
 public struct SrcPointPosInfo
 {
@@ -34,6 +41,7 @@ public class SrcPoint : MonoBehaviour
     public Color color;
     public float immuneDuration = 2.0f;
     public EnemyBase enemyTarget;
+    public bool touchedDstPoint;
 
     List<string> immuneTargetList = new List<string>();
 
@@ -59,6 +67,7 @@ public class SrcPoint : MonoBehaviour
         }
 
         //attacked = false;
+        touchedDstPoint = false;
     }
 
     // Update is called once per frame

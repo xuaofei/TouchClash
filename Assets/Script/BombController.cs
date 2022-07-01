@@ -17,6 +17,7 @@ public class BombController : EnemyBase
     public Color color;
 
     public float speed;
+    public bool sleeping;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class BombController : EnemyBase
         }
 
         //speed = 0.2f;
+        sleeping = false;
     }
 
     // Update is called once per frame
@@ -40,9 +42,21 @@ public class BombController : EnemyBase
     {
         if (attackTarget)
         {
-            transform.Translate((attackTarget.transform.position - transform.position).normalized * speed * Time.fixedDeltaTime, Space.World);
-            Vector3 v = (attackTarget.transform.position - transform.position).normalized;
-            transform.right = v;
+            if(attackTarget.touchedDstPoint == true && sleeping == false)
+            {
+                sleeping = true;
+            }
+            else if (attackTarget.touchedDstPoint == false && sleeping == true)
+            {
+                sleeping = false;
+            }
+
+            if (!sleeping)
+            { 
+                transform.Translate((attackTarget.transform.position - transform.position).normalized * speed * Time.fixedDeltaTime, Space.World);
+                Vector3 v = (attackTarget.transform.position - transform.position).normalized;
+                transform.right = v;
+            }
         }
     }
 
