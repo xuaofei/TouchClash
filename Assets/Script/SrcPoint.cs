@@ -41,7 +41,9 @@ public class SrcPoint : MonoBehaviour
     public Color color;
     public float immuneDuration = 2.0f;
     public EnemyBase enemyTarget;
-    public bool touchedDstPoint;
+
+    public bool touchedDstPoint;            //是否接触到目标点
+    public bool locking;                    //是否为锁定状态
 
     List<string> immuneTargetList = new List<string>();
 
@@ -68,6 +70,7 @@ public class SrcPoint : MonoBehaviour
 
         //attacked = false;
         touchedDstPoint = false;
+        locking = false;
     }
 
     // Update is called once per frame
@@ -84,7 +87,8 @@ public class SrcPoint : MonoBehaviour
 
     public bool canMove()
     {
-        return movementState == SrcPointMovementState.RUN;
+        return (movementState == SrcPointMovementState.RUN) &&
+            (locking == false);
     }
 
     public void setFingerID(int finger)

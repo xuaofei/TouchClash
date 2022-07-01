@@ -95,8 +95,35 @@ public class GameManager : MonoBehaviour
                 SrcPoint srcPoint = srcPointList.Find(SrcPoint => SrcPoint.fingerId == t.fingerId);
                 if (srcPoint && srcPoint.canMove())
                 {
-                    Debug.Log("touch moving:" + srcPoint.name);
+                    //Debug.Log("touch moving:" + srcPoint.name);
                     srcPoint.transform.position = ScreenToWorldPoint(t.position);
+                }
+
+                if (!srcPoint.canMove())
+                {
+                    Vector2 touchPos = ScreenToWorldPoint(t.position);
+
+                    RaycastHit2D hit = Physics2D.Raycast(touchPos, Vector2.zero);
+                    if (hit.collider)
+                    {
+                        //Debug.Log("touch began:" + hit.transform.name);
+
+                        SrcPoint colliderSrcPoint = hit.collider.GetComponent<SrcPoint>();
+                        if (srcPoint.srcPointId != colliderSrcPoint.srcPointId)
+                        {
+                            //srcPoint.changeMovementState(SrcPointMovementState.RUN);
+                            //srcPoint.setFingerID(t.fingerId);
+                            // 出现警告，手指离开了原点, 需要防重入处理。
+                            Handheld.Vibrate();
+                            Debug.Log("finger touch other srcpoint");
+                        }
+                    }
+                    else
+                    {
+                        // 出现警告，手指离开了原点, 需要防重入处理。
+                        Handheld.Vibrate();
+                        Debug.Log("finger leave srcpoint");
+                    }
                 }
 
                 //Debug.Log("touch pos:" + t.position.ToString());
@@ -370,6 +397,9 @@ public class GameManager : MonoBehaviour
         foreach (SrcPoint srcPoint in srcPointList)
         {
             srcPointPosInfos.Add(srcPoint.GetPosInfo());
+
+            // 刚进入下一关，需要先锁定SrcPoint
+            srcPoint.locking = true;
         }
 
         GameLevel gameLevel = gameLevelManager.GetGameLevel(levelIndex, srcPointPosInfos);
@@ -383,6 +413,14 @@ public class GameManager : MonoBehaviour
         GenerateCandy(gameLevel);
 
         ScoreWallEnterLevel(gameLevel);
+
+        UnityTimer.Timer.Register(2.0f, () => {
+            foreach (SrcPoint srcPoint in srcPointList)
+            {
+                // 解锁SrcPoint
+                srcPoint.locking = false;
+            }
+        });
     }
 
     private void StopLevel(int levelIndex)
