@@ -95,8 +95,27 @@ public class GameManager : MonoBehaviour
                 SrcPoint srcPoint = srcPointList.Find(SrcPoint => SrcPoint.fingerId == t.fingerId);
                 if (srcPoint && srcPoint.canMove())
                 {
+                    int minSpace = 80 + (int)WidgetSizeManager.Instance.srcPointRadius;
+                    int screenWidth = Screen.width;
+                    int screenHeight = Screen.height;
+
+                    Vector2 leftBottom = new Vector2(minSpace, minSpace);
+                    leftBottom = ScreenToWorldPoint(leftBottom);
+
+                    Vector2 leftTop = new Vector2(minSpace, screenHeight - minSpace);
+                    leftTop = ScreenToWorldPoint(leftTop);
+
+                    Vector2 rightBottom = new Vector2(screenWidth - minSpace, minSpace);
+                    rightBottom = ScreenToWorldPoint(rightBottom);
+
+                    Vector2 rightTop = new Vector2(screenWidth - minSpace, screenHeight - minSpace);
+                    rightTop = ScreenToWorldPoint(rightTop);
+
                     //Debug.Log("touch moving:" + srcPoint.name);
-                    srcPoint.transform.position = ScreenToWorldPoint(t.position);
+                    Vector2 srcPointPos = ScreenToWorldPoint(t.position);
+                    srcPointPos.x = Mathf.Clamp(srcPointPos.x, leftBottom.x, rightBottom.x);
+                    srcPointPos.y = Mathf.Clamp(srcPointPos.y, leftBottom.y, leftTop.y);
+                    srcPoint.transform.position = srcPointPos;
                 }
 
                 if (!srcPoint.canMove())
