@@ -15,13 +15,17 @@ public class CandyController : MonoBehaviour
 {
     public int candyId;
     //public SrcPoint test;
-
+    UnityTimer.Timer timer;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        gameObject.SetActive(false);
 
+        timer = UnityTimer.Timer.Register(1f, ()=> {
+            gameObject.SetActive(true);
+        });
     }
 
     // Update is called once per frame
@@ -39,6 +43,8 @@ public class CandyController : MonoBehaviour
 
     private void OnDestroy()
     {
+        timer.Cancel();
+        timer = null;
         Destroy(gameObject);
     }
 

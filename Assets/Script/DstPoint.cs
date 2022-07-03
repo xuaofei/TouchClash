@@ -36,6 +36,8 @@ public class DstPoint : MonoBehaviour
     public Color color;
     DstPointTouchState touchState;
 
+    UnityTimer.Timer timer;
+
     //public DstPointTouchEnterDelegate dstPointTouchEnterDelegate;
     //public DstPointTouchExitDelegate dstPointTouchExitDelegate;
 
@@ -47,6 +49,8 @@ public class DstPoint : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+
         touchState = DstPointTouchState.EXIT;
 
 #if TEST_ENABLE
@@ -70,6 +74,13 @@ public class DstPoint : MonoBehaviour
         {
             gameManager = map.GetComponent<GameManager>();
         }
+
+        gameObject.SetActive(false);
+
+        timer = UnityTimer.Timer.Register(2f, () => {
+            gameObject.SetActive(true);
+            gameManager.DstPointDidShow(this);
+        });
     }
 
     // Update is called once per frame
@@ -147,6 +158,8 @@ public class DstPoint : MonoBehaviour
 
     public void OnDestroy()
     {
+        timer.Cancel();
+        timer = null;
         Destroy(this.gameObject);
     }
 

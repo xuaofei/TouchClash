@@ -406,7 +406,7 @@ public class GameManager : MonoBehaviour
 
         GenerateDstPoint(gameLevel);
 
-        GenerateGuideLine(gameLevel);
+        //GenerateGuideLine(gameLevel);
 
         GenerateBomb(gameLevel);
 
@@ -468,5 +468,13 @@ public class GameManager : MonoBehaviour
     public void CountDownGameOver()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+    }
+
+    public void DstPointDidShow(DstPoint dstPoint)
+    {
+        //DstPoint dstPoint = dstPointList[i];
+        SrcPoint srcPoint = srcPointList[dstPoint.dstPointId];
+
+        TestGuideLine(srcPoint, dstPoint);
     }
 }

@@ -19,6 +19,8 @@ public class BombController : EnemyBase
     public float speed;
     public bool sleeping;
 
+    UnityTimer.Timer timer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,12 @@ public class BombController : EnemyBase
 
         //speed = 0.2f;
         sleeping = false;
+
+        gameObject.SetActive(false);
+
+        timer = UnityTimer.Timer.Register(1f, () => {
+            gameObject.SetActive(true);
+        });
     }
 
     // Update is called once per frame
@@ -51,7 +59,7 @@ public class BombController : EnemyBase
                 sleeping = false;
             }
 
-            if (!sleeping)
+            if (!sleeping && gameObject.activeSelf)
             { 
                 transform.Translate((attackTarget.transform.position - transform.position).normalized * speed * Time.fixedDeltaTime, Space.World);
                 Vector3 v = (attackTarget.transform.position - transform.position).normalized;
@@ -62,6 +70,8 @@ public class BombController : EnemyBase
 
     private void OnDestroy()
     {
+        timer.Cancel();
+        timer = null;
         Destroy(gameObject);
     }
 
